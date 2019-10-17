@@ -94,7 +94,8 @@ function getOffer(index) {
  * @param  {} phenotype
  */
 const mutationFunction = (phenotype) => {
-	const index = Math.round(Math.random());
+    const index = Math.floor(Math.random() * phenotype.length);
+    console.log('INDICE A MODIFICAR', index);
 	phenotype[index] ^= 1;
 	return phenotype;
 };
