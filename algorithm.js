@@ -3,11 +3,11 @@ var input = {
 	offers: [
 		{
 			id: 1,
-			category: "A",
-			relevance: 1,
-			isExclusive: true,
-			cashback: 0.25,
-			brand: "nestle",
+			category: "A",//similarity
+			relevance: 1,//similarity
+			isExclusive: true,//similarity
+			cashback: 0.25,//similarity
+			brand: "nestle",//similarity
 			user: {
 				redemptionsCount: 2,
 				frecuency: 30,
@@ -23,10 +23,20 @@ var input = {
 	],
 	user: {
 		redemptionAvg: 0.75,
-		lastRedemptionDate: new Date(),
-		lastReceivedPushDate: new Date(),
-		totalRedemptionsCount: 1,
 		remainingToCashout: 0.25
+	}
+}
+
+var weights = {
+	OFFERS_DISTANCES: 0.3,
+	OFFER_REDEMPTION: 0.1,
+	CASHBACK: 0.1,
+	REMAINING_CASHBACK: 0.1,
+	DISTANCE: {
+		SIMILAR_CASHBACK: 0.1,
+		SIMILAR_REDEMPTIONS: 0.1,
+		SIMILAR_RELEVANCE: 0.1,
+		SIMILAR_BRAND: 0.2
 	}
 }
 
@@ -69,25 +79,39 @@ const crossoverFunction = (phenotypeA, phenotypeB) => {
 };
 
 function fitnessFunction(phenotype) {
-	var score = 0
+
+	const size = phenotype.size;
+	const { OFFERS_DISTANCES, OFFER_REDEMPTION } = weights;
+	const { globalUser: user } = input;
+
+	let redemptionSum = 0;
+	let cashbackSum = 0;
+	let remainingToCashbackSum = 0;
+	for (let i = 0; i < phenotype.length; i++) {
+		const offer = inputs[i];
+		const { user } = offer;
+		redemptionSum += user.redemptionsCount * OFFER_REDEMPTION;
+
+		cashbackSum += Math.abs(globalUser.redemptionAvg - offerCashback);
+		remainingToCashbackSum += Math.abs(globalUser.remainingToCashout - offerCashback);
+	}
+
+	var score =
+		1 - (remainingToCashbackSum / size) * REMAINING_CASHBACK +
+		1 - (cashbackSum / size) * CASHBACK +
+		(redemptionSum / size) + // Redemption AVG
+		distance(phenotype) * OFFERS_DISTANCES;
+
+
 	// use your phenotype data to figure out a fitness score
 
 
-	return score
+	return score;
 }
 
 var firstPhenotype = [0, 1, 1, 0, 0];
 
-var config = {
-	weights: {
-		OFFERS_DISTANCES: 0.3,
-		SIMILAR_CASHBACK: 0.1,
-		SIMILAR_REDEMPTIONS: 0.1,
-		SIMILAR_RELEVANCE: 0.1,
-		SIMILAR_BRAND: 0.2,
 
-	}
-}
 
 var geneticAlgorithmConstructor = require('geneticalgorithm')
 var ga = geneticAlgorithmConstructor({
@@ -112,9 +136,19 @@ distance()
 
 
 
-function distance() {
+function distance(offers) {
 
-	console.log(permute([1, 2, 3]))
+	//console.log(permute([1, 2, 3]))
+
+	const distances = [];
+	let distance = 0;
+	for (let i = 0; i < offers.length; i++) {
+		if (offers[i] == 1) {
+			const offer = inputs[offerIndexes[i]];
+		}
+
+
+	}
 
 }
 
