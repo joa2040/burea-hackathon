@@ -71,10 +71,10 @@ var input = {
 }
 
 var weights = {
-	OFFERS_DISTANCES: 0.3,
-	OFFER_REDEMPTION: 0.1,
-	CASHBACK: 0.1,
-	REMAINING_CASHBACK: 0.1,
+	OFFERS_DISTANCES: 0.5,
+	OFFER_REDEMPTION: 0.15,
+	CASHBACK: 0.15,
+	REMAINING_CASHBACK: 0.2,
 	DISTANCE: {
 		SIMILAR_CASHBACK: 0.1,
 		SIMILAR_REDEMPTIONS: 0.1,
@@ -124,19 +124,24 @@ const crossoverFunction = (phenotypeA, phenotypeB) => {
 function fitnessFunction(phenotype) {
 
 	const size = phenotype.size;
-	const { OFFERS_DISTANCES, OFFER_REDEMPTION } = weights;
-	const { globalUser: user } = input;
+	const {
+		OFFERS_DISTANCES,
+		OFFER_REDEMPTION,
+		CASHBACK,
+		REMAINING_CASHBACK } = weights;
+	const globalUser = input.user;
+	const { offers } = input;
 
 	let redemptionSum = 0;
 	let cashbackSum = 0;
 	let remainingToCashbackSum = 0;
 	for (let i = 0; i < phenotype.length; i++) {
-		const offer = inputs[i];
+		const offer = offers[i];
 		const { user } = offer;
 		redemptionSum += user.redemptionsCount * OFFER_REDEMPTION;
 
-		cashbackSum += Math.abs(globalUser.redemptionAvg - offerCashback);
-		remainingToCashbackSum += Math.abs(globalUser.remainingToCashout - offerCashback);
+		cashbackSum += Math.abs(globalUser.redemptionAvg - offer.cashback);
+		remainingToCashbackSum += Math.abs(globalUser.remainingToCashout - offer.cashback);
 	}
 
 	var score =
@@ -155,7 +160,6 @@ function fitnessFunction(phenotype) {
 var firstPhenotype = [0, 1, 1, 0, 0];
 
 
-
 var geneticAlgorithmConstructor = require('geneticalgorithm')
 var ga = geneticAlgorithmConstructor({
 	mutationFunction: mutationFunction,
@@ -166,7 +170,7 @@ var ga = geneticAlgorithmConstructor({
 
 console.log("Starting with:")
 console.log(firstPhenotype)
-//for (var i = 0; i < 15; i++) ga.evolve({ populationSize: 64 })
+for (var i = 0; i < 3; i++) ga.evolve({ populationSize: 64 })
 var best = ga.best()
 delete best.score
 console.log("Finished with:")
@@ -181,6 +185,8 @@ distance()
 
 function distance(offers) {
 
+
+	return Math.random() - 0.5;
 	//console.log(permute([1, 2, 3]))
 
 	const distances = [];
