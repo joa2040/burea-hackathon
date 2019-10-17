@@ -1,10 +1,22 @@
 const geneticAlgorithmConstructor = require('geneticalgorithm');
 
+/**
+ * Change random element inside de phenotype using XOR operation
+ * 
+ * @param  {} phenotype
+ */
 const mutationFunction = (phenotype) => {
-	// make a random change to phenotype
+    const index = Math.round(Math.random());
+	phenotype[index] ^= 1; 
     return phenotype
 };
 
+/**
+ * Crossover step of two phenotypes, making two new children
+ * 
+ * @param  {} phenotypeA
+ * @param  {} phenotypeB
+ */
 const crossoverFunction = (phenotypeA, phenotypeB) => {
     const parents = [phenotypeA, phenotypeB];
     const phenotypeLength = phenotypeA.length;
