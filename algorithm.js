@@ -35,20 +35,42 @@ function getOffer(index) {
 	return filtered.length ? filtered[0] : null;
 }
 
-function mutationFunction(phenotype) {
-	// make a random change to phenotype
+/**
+ * Change random element inside de phenotype using XOR operation
+ * 
+ * @param  {} phenotype
+ */
+const mutationFunction = (phenotype) => {
+	const index = Math.round(Math.random());
+phenotype[index] ^= 1; 
 	return phenotype
-}
+};
 
-function crossoverFunction(phenotypeA, phenotypeB) {
-	// move, copy, or append some values from a to b and from b to a
-	return [phenotypeA, phenotypeB]
-}
+/**
+* Crossover step of two phenotypes, making two new children
+* 
+* @param  {} phenotypeA
+* @param  {} phenotypeB
+*/
+const crossoverFunction = (phenotypeA, phenotypeB) => {
+	const parents = [phenotypeA, phenotypeB];
+	const phenotypeLength = phenotypeA.length;
+	let child1 = [];
+	let child2 = [];
+	child1.length = phenotypeLength;
+	child2.length = phenotypeLength;
+
+for (var i = 0; i < phenotypeLength; i++) {
+			child1[i] = parents[Math.round(Math.random())][i];
+			child2[i] = parents[Math.round(Math.random())][i];
+	}
+	
+return [ child1 , child2 ];
+};
 
 function fitnessFunction(phenotype) {
 	var score = 0
 	// use your phenotype data to figure out a fitness score
-
 
 
 	return score
