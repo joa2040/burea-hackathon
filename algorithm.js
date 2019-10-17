@@ -14,12 +14,55 @@ var input = {
 				lastRedemptionDate: new Date()
 			}
 		}, {
-
+			id: 2,
+			category: "B",
+			relevance: 3,
+			isExclusive: true,
+			cashback: 0.50,
+			brand: "Raid",
+			user: {
+				redemptionsCount: 4,
+				frecuency: 15,
+				lastRedemptionDate: new Date()
+			}
 		}, {
-
+			id: 3,
+			category: "A",
+			relevance: 2,
+			isExclusive: false,
+			cashback: 3.00,
+			brand: "Nesquik",
+			user: {
+				redemptionsCount: 3,
+				frecuency: 18,
+				lastRedemptionDate: new Date()
+			}
 		}, {
-
-		}
+			id: 4,
+			category: "A",
+			relevance: 3,
+			isExclusive: true,
+			cashback: 0.25,
+			brand: "Raid",
+			user: {
+				redemptionsCount: 2,
+				frecuency: 30,
+				lastRedemptionDate: new Date()
+			}
+		},
+		{
+			id: 5,
+			category: "B",
+			relevance: 1,
+			isExclusive: true,
+			cashback: 0.50,
+			brand: "Hostess",
+			user: {
+				redemptionsCount: 5,
+				frecuency: 10,
+				lastRedemptionDate: new Date()
+			}
+		},
 	],
 	user: {
 		redemptionAvg: 0.75,
@@ -53,15 +96,15 @@ function getOffer(index) {
 const mutationFunction = (phenotype) => {
 	const index = Math.round(Math.random());
 	phenotype[index] ^= 1;
-	return phenotype
+	return phenotype;
 };
 
 /**
-* Crossover step of two phenotypes, making two new children
-* 
-* @param  {} phenotypeA
-* @param  {} phenotypeB
-*/
+ * Crossover step of two phenotypes, making two new children
+ * 
+ * @param  {} phenotypeA
+ * @param  {} phenotypeB
+ */
 const crossoverFunction = (phenotypeA, phenotypeB) => {
 	const parents = [phenotypeA, phenotypeB];
 	const phenotypeLength = phenotypeA.length;
