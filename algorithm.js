@@ -8,7 +8,7 @@ const geneticAlgorithmConstructor = require('geneticalgorithm');
 const mutationFunction = (phenotype) => {
     const index = Math.round(Math.random());
 	phenotype[index] ^= 1; 
-    return phenotype
+    return phenotype;
 };
 
 /**
