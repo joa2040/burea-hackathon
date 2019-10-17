@@ -42,7 +42,7 @@ function getOffer(index) {
  */
 const mutationFunction = (phenotype) => {
 	const index = Math.round(Math.random());
-phenotype[index] ^= 1; 
+	phenotype[index] ^= 1;
 	return phenotype
 };
 
@@ -60,12 +60,12 @@ const crossoverFunction = (phenotypeA, phenotypeB) => {
 	child1.length = phenotypeLength;
 	child2.length = phenotypeLength;
 
-for (var i = 0; i < phenotypeLength; i++) {
-			child1[i] = parents[Math.round(Math.random())][i];
-			child2[i] = parents[Math.round(Math.random())][i];
+	for (var i = 0; i < phenotypeLength; i++) {
+		child1[i] = parents[Math.round(Math.random())][i];
+		child2[i] = parents[Math.round(Math.random())][i];
 	}
-	
-return [ child1 , child2 ];
+
+	return [child1, child2];
 };
 
 function fitnessFunction(phenotype) {
@@ -85,7 +85,7 @@ var config = {
 		SIMILAR_REDEMPTIONS: 0.1,
 		SIMILAR_RELEVANCE: 0.1,
 		SIMILAR_BRAND: 0.2,
-		
+
 	}
 }
 
