@@ -31,7 +31,7 @@ let geneticAlgorithm = geneticAlgorithmConstructor({
 console.log("Starting with:");
 console.log( firstPhenotype );
 
-for( var i = 0 ; i < 100 ; i++ ) geneticAlgorithm.evolve()
+for( var i = 0 ; i < 100 ; i++ ) geneticAlgorithm.evolve();
 
 const best = geneticAlgorithm.best();
 delete best.score;
