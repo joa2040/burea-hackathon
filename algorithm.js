@@ -6,8 +6,19 @@ const mutationFunction = (phenotype) => {
 };
 
 const crossoverFunction = (phenotypeA, phenotypeB) => {
-	// move, copy, or append some values from a to b and from b to a
-	return [ phenotypeA , phenotypeB ]
+    const parents = [phenotypeA, phenotypeB];
+    const phenotypeLength = phenotypeA.length;
+    let child1 = [];
+    let child2 = [];
+    child1.length = phenotypeLength;
+    child2.length = phenotypeLength;
+
+	for (var i = 0; i < phenotypeLength; i++) {
+        child1[i] = parents[Math.round(Math.random())][i];
+        child2[i] = parents[Math.round(Math.random())][i];
+    }
+    
+	return [ child1 , child2 ];
 };
 
 const fitnessFunction = (phenotype) => {
