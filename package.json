@@ -1,0 +1,22 @@
+{
+  "name": "burea",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joa2040/burea-hackathon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joa2040/burea-hackathon/issues"
+  },
+  "homepage": "https://github.com/joa2040/burea-hackathon#readme",
+  "dependencies": {
+    "geneticalgorithm": "^0.3.6"
+  }
+}
