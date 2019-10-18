@@ -1,94 +1,5 @@
-Array.prototype.pairs = function (func) {
-	for (var i = 0; i < this.length - 1; i++) {
-		for (var j = i; j < this.length - 1; j++) {
-			func([this[i], this[j + 1]]);
-		}
-	}
-}
-//INPUT OBJECT
-var input = {
-	offers: [
-		{
-			id: 1,
-			category: "A",//similarity
-			relevance: 1,//similarity
-			isExclusive: true,//similarity
-			cashback: 0.25,//similarity
-			brand: "nestle",//similarity
-			user: {
-				redemptionsCount: 2,
-				frecuency: 30,
-				lastRedemptionDate: new Date()
-			}
-		}, {
-			id: 2,
-			category: "B",
-			relevance: 3,
-			isExclusive: true,
-			cashback: 0.50,
-			brand: "nestle",
-			user: {
-				redemptionsCount: 4,
-				frecuency: 15,
-				lastRedemptionDate: new Date()
-			}
-		}, {
-			id: 3,
-			category: "B",
-			relevance: 1,
-			isExclusive: false,
-			cashback: 3.00,
-			brand: "Nesquik",
-			user: {
-				redemptionsCount: 3,
-				frecuency: 18,
-				lastRedemptionDate: new Date()
-			}
-		}, {
-			id: 4,
-			category: "A",
-			relevance: 3,
-			isExclusive: true,
-			cashback: 0.25,
-			brand: "Raid",
-			user: {
-				redemptionsCount: 2,
-				frecuency: 30,
-				lastRedemptionDate: new Date()
-			}
-		},
-		{
-			id: 5,
-			category: "B",
-			relevance: 1,
-			isExclusive: true,
-			cashback: 0.50,
-			brand: "Hostess",
-			user: {
-				redemptionsCount: 5,
-				frecuency: 10,
-				lastRedemptionDate: new Date()
-			}
-		},
-	],
-	user: {
-		redemptionAvg: 0.75,
-		remainingToCashout: 0.25
-	}
-}
-
-var weights = {
-	OFFERS_DISTANCES: 0.5,
-	OFFER_REDEMPTION: 0.15,
-	CASHBACK: 0.15,
-	REMAINING_CASHBACK: 0.2,
-	DISTANCE: {
-		SIMILAR_CASHBACK: 0.1,
-		SIMILAR_RELEVANCE: 0.1,
-		SIMILIAR_CATEGORY: 0.5,
-		SIMILAR_BRAND: 0.3,
-	}
-}
+const util = require('./util');
+const input = require('./input');
 
 /**
  * Change random element inside de phenotype using XOR operation
@@ -135,7 +46,7 @@ function fitnessFunction(phenotype) {
 		OFFERS_DISTANCES,
 		OFFER_REDEMPTION,
 		CASHBACK,
-		REMAINING_CASHBACK } = weights;
+		REMAINING_CASHBACK } = input.weights;
 	const globalUser = input.user;
 	const { offers } = input;
 
@@ -153,11 +64,11 @@ function fitnessFunction(phenotype) {
 		}
 	}
 
-	var score =
+	const score =
 		1 - (remainingToCashbackSum / size) * REMAINING_CASHBACK +
 		1 - (cashbackSum / size) * CASHBACK +
 		(redemptionSum / size) + // Redemption AVG
-		distance(phenotype) * OFFERS_DISTANCES;
+		util.distance(phenotype) * OFFERS_DISTANCES;
 
 
 	// use your phenotype data to figure out a fitness score
@@ -175,51 +86,10 @@ var ga = geneticAlgorithmConstructor({
 	population: [firstPhenotype]
 });
 
-console.log("Starting with:")
-console.log(firstPhenotype)
-for (var i = 0; i < 3; i++) ga.evolve({ populationSize: 64 })
+console.log("Starting with:");
+util.displayInput();
+for (var i = 0; i < 30; i++) ga.evolve({ populationSize: 64 })
 var best = ga.best()
 delete best.score
 console.log("Finished with:")
-console.log(best)
-
-
-distance(firstPhenotype)
-
-//compareOffers(input.offers[0], input.offers[1]);
-
-function distance(phenotype) {
-
-	const size = phenotype.filter(p => p).length;
-	let sum = 0;
-
-	for (let i = 0; i < phenotype.length - 1; i++) {
-		for (let j = i; j < phenotype.length - 1; j++) {
-			if (phenotype[i] && phenotype[j + 1]) {
-				sum += compareOffers(input.offers[i], input.offers[j + 1]);
-			}
-		}
-	}
-	return sum / size;
-}
-
-function compareOffers(offer1, offer2) {
-	//console.log(offer1, offer2);
-
-	const {
-		SIMILAR_CASHBACK,
-		SIMILAR_RELEVANCE,
-		SIMILIAR_CATEGORY,
-		SIMILAR_BRAND } = weights.DISTANCE;
-
-	const MAX_CASHBACK_DIFF = 0.15;
-	const MAX_RELEVANCE_DIFF = 1;
-
-	const result = (Math.abs(offer1.cashback - offer2.cashback) < MAX_CASHBACK_DIFF ? SIMILAR_CASHBACK : 0) +
-		(Math.abs(offer1.relevance - offer2.relevance) <= MAX_RELEVANCE_DIFF ? SIMILAR_RELEVANCE : 0) +
-		(offer1.category === offer2.category ? SIMILIAR_CATEGORY : 0) +
-		(offer1.brand === offer2.brand ? SIMILAR_BRAND : 0);
-
-	//console.log("IND" + offer1.relevance + "-" + offer2.relevance, result);
-	return result;
-}
+console.table(util.formatPhenotype(best));
