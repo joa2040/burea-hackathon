@@ -90,7 +90,6 @@ var weights = {
  */
 const mutationFunction = (phenotype) => {
 	const index = Math.floor(Math.random() * phenotype.length);
-	console.log('INDICE A MODIFICAR', index);
 	phenotype[index] ^= 1;
 	return phenotype;
 };
@@ -119,7 +118,12 @@ const crossoverFunction = (phenotypeA, phenotypeB) => {
 
 function fitnessFunction(phenotype) {
 
-	const size = phenotype.size;
+	const size = phenotype.filter(p => p).length;
+
+	if (!size) {
+		return 0;
+	}
+
 	const {
 		OFFERS_DISTANCES,
 		OFFER_REDEMPTION,
@@ -132,12 +136,14 @@ function fitnessFunction(phenotype) {
 	let cashbackSum = 0;
 	let remainingToCashbackSum = 0;
 	for (let i = 0; i < phenotype.length; i++) {
-		const offer = offers[i];
-		const { user } = offer;
-		redemptionSum += user.redemptionsCount * OFFER_REDEMPTION;
+		if (phenotype[i]) {
+			const offer = offers[i];
+			const { user } = offer;
+			redemptionSum += user.redemptionsCount * OFFER_REDEMPTION;
 
-		cashbackSum += Math.abs(globalUser.redemptionAvg - offer.cashback);
-		remainingToCashbackSum += Math.abs(globalUser.remainingToCashout - offer.cashback);
+			cashbackSum += Math.abs(globalUser.redemptionAvg - offer.cashback);
+			remainingToCashbackSum += Math.abs(globalUser.remainingToCashout - offer.cashback);
+		}
 	}
 
 	var score =
@@ -148,7 +154,6 @@ function fitnessFunction(phenotype) {
 
 
 	// use your phenotype data to figure out a fitness score
-
 
 	return score;
 }
