@@ -1,3 +1,10 @@
+Array.prototype.pairs = function (func) {
+	for (var i = 0; i < this.length - 1; i++) {
+		for (var j = i; j < this.length - 1; j++) {
+			func([this[i], this[j + 1]]);
+		}
+	}
+}
 //INPUT OBJECT
 var input = {
 	offers: [
@@ -27,8 +34,8 @@ var input = {
 			}
 		}, {
 			id: 3,
-			category: "A",
-			relevance: 2,
+			category: "B",
+			relevance: 1,
 			isExclusive: false,
 			cashback: 3.00,
 			brand: "Nesquik",
@@ -170,38 +177,35 @@ var ga = geneticAlgorithmConstructor({
 
 console.log("Starting with:")
 console.log(firstPhenotype)
-//for (var i = 0; i < 3; i++) ga.evolve({ populationSize: 64 })
+for (var i = 0; i < 3; i++) ga.evolve({ populationSize: 64 })
 var best = ga.best()
 delete best.score
 console.log("Finished with:")
 console.log(best)
 
 
-var permArr = [],
-	usedChars = [];
-distance()
+distance(firstPhenotype)
 
-compareOffers(input.offers[0], input.offers[1]);
+//compareOffers(input.offers[0], input.offers[1]);
 
-function distance(offers) {
+function distance(phenotype) {
 
+	const size = phenotype.filter(p => p).length;
+	let sum = 0;
 
-	return Math.random() - 0.5;
-	//console.log(permute([1, 2, 3]))
-
-	const distances = [];
-	let distance = 0;
-	for (let i = 0; i < offers.length; i++) {
-		if (offers[i] == 1) {
-			const offer = inputs[offerIndexes[i]];
+	for (let i = 0; i < phenotype.length - 1; i++) {
+		for (let j = i; j < phenotype.length - 1; j++) {
+			if (phenotype[i] && phenotype[j + 1]) {
+				sum += compareOffers(input.offers[i], input.offers[j + 1]);
+			}
 		}
-
-
 	}
-
+	console.log("TOTAL::", sum / size);
 }
 
 function compareOffers(offer1, offer2) {
+	console.log(offer1, offer2);
+
 	const {
 		SIMILAR_CASHBACK,
 		SIMILAR_RELEVANCE,
@@ -212,27 +216,10 @@ function compareOffers(offer1, offer2) {
 	const MAX_RELEVANCE_DIFF = 1;
 
 	const result = (Math.abs(offer1.cashback - offer2.cashback) < MAX_CASHBACK_DIFF ? SIMILAR_CASHBACK : 0) +
-		(Math.abs(offer1.relevance - offer2.relevance) < MAX_RELEVANCE_DIFF ? SIMILAR_RELEVANCE : 0) +
+		(Math.abs(offer1.relevance - offer2.relevance) <= MAX_RELEVANCE_DIFF ? SIMILAR_RELEVANCE : 0) +
 		(offer1.category === offer2.category ? SIMILIAR_CATEGORY : 0) +
 		(offer1.brand === offer2.brand ? SIMILAR_BRAND : 0);
 
-	console.log(result);
+	console.log("IND" + offer1.relevance + "-" + offer2.relevance, result);
 	return result;
 }
-
-function permute(input) {
-	var i, ch;
-	for (i = 0; i < input.length; i++) {
-		ch = input.splice(i, 1)[0];
-		console.log("CH", ch);
-
-		usedChars.push(ch);
-		if (input.length == 0) {
-			permArr.push(usedChars.slice());
-		}
-		permute(input);
-		input.splice(i, 0, ch);
-		usedChars.pop();
-	}
-	return permArr
-};
