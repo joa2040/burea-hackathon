@@ -200,7 +200,7 @@ function distance(phenotype) {
 			}
 		}
 	}
-	console.log("TOTAL::", sum / size);
+	return sum / size;
 }
 
 function compareOffers(offer1, offer2) {
