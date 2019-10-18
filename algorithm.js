@@ -204,7 +204,7 @@ function distance(phenotype) {
 }
 
 function compareOffers(offer1, offer2) {
-	console.log(offer1, offer2);
+	//console.log(offer1, offer2);
 
 	const {
 		SIMILAR_CASHBACK,
@@ -220,6 +220,6 @@ function compareOffers(offer1, offer2) {
 		(offer1.category === offer2.category ? SIMILIAR_CATEGORY : 0) +
 		(offer1.brand === offer2.brand ? SIMILAR_BRAND : 0);
 
-	console.log("IND" + offer1.relevance + "-" + offer2.relevance, result);
+	//console.log("IND" + offer1.relevance + "-" + offer2.relevance, result);
 	return result;
 }
