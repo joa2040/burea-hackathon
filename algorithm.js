@@ -19,7 +19,7 @@ var input = {
 			relevance: 3,
 			isExclusive: true,
 			cashback: 0.50,
-			brand: "Raid",
+			brand: "nestle",
 			user: {
 				redemptionsCount: 4,
 				frecuency: 15,
@@ -77,15 +77,10 @@ var weights = {
 	REMAINING_CASHBACK: 0.2,
 	DISTANCE: {
 		SIMILAR_CASHBACK: 0.1,
-		SIMILAR_REDEMPTIONS: 0.1,
 		SIMILAR_RELEVANCE: 0.1,
-		SIMILAR_BRAND: 0.2
+		SIMILIAR_CATEGORY: 0.5,
+		SIMILAR_BRAND: 0.3,
 	}
-}
-
-function getOffer(index) {
-	const filtered = input.offers.filter((e) => { return e.id == id });
-	return filtered.length ? filtered[0] : null;
 }
 
 /**
@@ -94,8 +89,8 @@ function getOffer(index) {
  * @param  {} phenotype
  */
 const mutationFunction = (phenotype) => {
-    const index = Math.floor(Math.random() * phenotype.length);
-    console.log('INDICE A MODIFICAR', index);
+	const index = Math.floor(Math.random() * phenotype.length);
+	console.log('INDICE A MODIFICAR', index);
 	phenotype[index] ^= 1;
 	return phenotype;
 };
@@ -160,7 +155,6 @@ function fitnessFunction(phenotype) {
 
 var firstPhenotype = [0, 1, 1, 0, 0];
 
-
 var geneticAlgorithmConstructor = require('geneticalgorithm')
 var ga = geneticAlgorithmConstructor({
 	mutationFunction: mutationFunction,
@@ -171,7 +165,7 @@ var ga = geneticAlgorithmConstructor({
 
 console.log("Starting with:")
 console.log(firstPhenotype)
-for (var i = 0; i < 3; i++) ga.evolve({ populationSize: 64 })
+//for (var i = 0; i < 3; i++) ga.evolve({ populationSize: 64 })
 var best = ga.best()
 delete best.score
 console.log("Finished with:")
@@ -182,7 +176,7 @@ var permArr = [],
 	usedChars = [];
 distance()
 
-
+compareOffers(input.offers[0], input.offers[1]);
 
 function distance(offers) {
 
@@ -202,6 +196,24 @@ function distance(offers) {
 
 }
 
+function compareOffers(offer1, offer2) {
+	const {
+		SIMILAR_CASHBACK,
+		SIMILAR_RELEVANCE,
+		SIMILIAR_CATEGORY,
+		SIMILAR_BRAND } = weights.DISTANCE;
+
+	const MAX_CASHBACK_DIFF = 0.15;
+	const MAX_RELEVANCE_DIFF = 1;
+
+	const result = (Math.abs(offer1.cashback - offer2.cashback) < MAX_CASHBACK_DIFF ? SIMILAR_CASHBACK : 0) +
+		(Math.abs(offer1.relevance - offer2.relevance) < MAX_RELEVANCE_DIFF ? SIMILAR_RELEVANCE : 0) +
+		(offer1.category === offer2.category ? SIMILIAR_CATEGORY : 0) +
+		(offer1.brand === offer2.brand ? SIMILAR_BRAND : 0);
+
+	console.log(result);
+	return result;
+}
 
 function permute(input) {
 	var i, ch;
